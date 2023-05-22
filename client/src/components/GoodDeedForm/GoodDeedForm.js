@@ -2,35 +2,34 @@ import React, { useState, useContext, useEffect, useCallback } from "react";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { Button, Form, Input, Textarea } from "./styles";
-import { UserGoodDeedsContext } from "../../context/UserGoodDeedsContext";
-import { AuthContext } from "../../context/AuthContext";
-import useDecodedToken from "../../hooks/useDecodedToken";
+import { UserGoodDeedsContext } from "../../contexts/UserGoodDeedsContext";
+import { AuthContext } from "../../contexts/AuthContext";
 
-const AddGoodDeedForm = () => {
+const GoodDeedForm = ({ onClick }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [user, setUser] = useState({});
+
   const [difficulty, setDifficulty] = useState("easy");
   const [status, setStatus] = useState("pending");
 
   // use effect to get the user data ( name and id ) by id
-  const { addGoodDeed } = useContext(UserGoodDeedsContext);
-  const { isUserLoggedIn, fetchUserData, userDetails } =
+  const { addGoodDeed, submitNewUserGoodDeed } =
+    useContext(UserGoodDeedsContext);
+  const { isUserLoggedIn, fetchUserDetails, userDetails } =
     useContext(AuthContext);
 
-  // useeffect to get the user data ( name and id ) by id with     fetchUserData(userid);
+  const token = localStorage.getItem("token");
+  const decodedToken = jwt_decode(token);
+  const userid = decodedToken.user.id;
+
+  // useeffect to get the user data ( name and id ) by id with     fetchUserDetails(userid);
   useEffect(() => {
     if (!isUserLoggedIn) {
       return;
     }
-    const token = localStorage.getItem("token");
-    const decodedToken = jwt_decode(token);
-    const userid = decodedToken.user.id;
-    const fetchUserDataGoodDeeds = async () => {
-      await fetchUserData(userid, token);
-    };
-    fetchUserDataGoodDeeds();
-  }, [isUserLoggedIn]);
+
+    fetchUserDetails(userid, token);
+  }, [isUserLoggedIn, fetchUserDetails, userid, token]);
 
   // get the user name from the api
 
@@ -51,8 +50,6 @@ const AddGoodDeedForm = () => {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-
     const newGoodDeed = {
       title,
       description,
@@ -62,16 +59,14 @@ const AddGoodDeedForm = () => {
       user: userDetails._id,
     };
 
-    try {
-      await addGoodDeed(newGoodDeed);
-      // Reset the form inputs
-      setTitle("");
-      setDescription("");
-      setDifficulty("easy");
-      setStatus("pending");
-    } catch (error) {
-      console.error(error);
-    }
+    event.preventDefault();
+    submitNewUserGoodDeed(event, newGoodDeed);
+
+    // Reset the form inputs
+    setTitle("");
+    setDescription("");
+    setDifficulty("easy");
+    setStatus("pending");
   };
 
   return (
@@ -103,4 +98,4 @@ const AddGoodDeedForm = () => {
   );
 };
 
-export default AddGoodDeedForm;
+export default GoodDeedForm;

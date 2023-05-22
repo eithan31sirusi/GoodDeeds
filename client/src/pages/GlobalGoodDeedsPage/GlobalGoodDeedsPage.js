@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
-import { GoodDeedsContext } from "../../context/GoodDeedsContext";
-import { AuthContext } from "../../context/AuthContext";
-import { UserGoodDeedsContext } from "../../context/UserGoodDeedsContext";
+import { GoodDeedsContext } from "../../contexts/GoodDeedsContext";
+import { AuthContext } from "../../contexts/AuthContext";
+import { UserGoodDeedsContext } from "../../contexts/UserGoodDeedsContext";
 import jwt_decode from "jwt-decode";
 
 import {
@@ -17,7 +17,7 @@ import {
 
 const GlobalGoodDeedsPage = () => {
   const { loading, globalGoodDeeds } = useContext(GoodDeedsContext);
-  const { token, userDetails, fetchUserData } = useContext(AuthContext);
+  const { token, userDetails, fetchUserDetails } = useContext(AuthContext);
 
   const { saveGlobalGoodDeed } = useContext(UserGoodDeedsContext);
 
@@ -28,8 +28,8 @@ const GlobalGoodDeedsPage = () => {
     const token = localStorage.getItem("token");
     const decodedToken = jwt_decode(token);
     const userid = decodedToken.user.id;
-    fetchUserData(userid, token);
-  }, [token]);
+    fetchUserDetails(userid, token);
+  }, [fetchUserDetails]);
 
   return (
     <GoodDeedsContainer>
@@ -47,7 +47,7 @@ const GlobalGoodDeedsPage = () => {
               <GoodDeedsListItemUser>{deed.difficulty}</GoodDeedsListItemUser>
               <button
                 onClick={() => {
-                  // save the global good deed to the user good deeds and takes from the fetchUserData the creator name and id
+                  // save the global good deed to the user good deeds and takes from the fetchUserDetails the creator name and id
                   saveGlobalGoodDeed({
                     ...deed,
                     creator: userDetails.name,

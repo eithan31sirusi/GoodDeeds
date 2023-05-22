@@ -1,5 +1,6 @@
 // AuthContext.js
-import React, { createContext, useEffect, useState } from "react";
+import React, { createContext, useCallback, useEffect, useState } from "react";
+
 import jwt_decode from "jwt-decode";
 import axios from "axios";
 export const AuthContext = createContext();
@@ -9,9 +10,10 @@ export const AuthProvider = ({ children }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [userid, setUserid] = useState(null);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [users, setUsers] = useState([]); // [usersList, setUsersList
   const [userDetails, setUserDetails] = useState(null); // [userDetails, setUserDetails]
 
-  const fetchUserData = async (id,token) => {
+  const fetchUserDetails = useCallback(async (id, token) => {
     try {
       if (token) {
         const response = await axios.get(
@@ -23,6 +25,24 @@ export const AuthProvider = ({ children }) => {
           }
         );
         setUserDetails(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+  // fatch all users
+  const fetchAllUsers = async () => {
+    try {
+      if (token) {
+        const response = await axios.get(
+          `http://localhost:5000/api/admin/users`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setUsers(response.data);
       }
     } catch (error) {
       console.log(error);
@@ -76,7 +96,8 @@ export const AuthProvider = ({ children }) => {
         isUserLoggedIn,
         setIsUserLoggedIn,
         userDetails,
-        fetchUserData,
+        fetchUserDetails,
+        fetchAllUsers,
       }}
     >
       {children}

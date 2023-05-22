@@ -1,17 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import styled from "styled-components";
-import UsersList from "../../components/UsersList/UsersList";
+
 import AddGlobalGoodDeedForm from "../../components/AdminDashboard/AddGlobalGoodDeedForm/AddGlobalGoodDeedForm";
 import AddNewUserForm from "../../components/AdminDashboard/AddNewUserForm/AddNewUserForm";
 import FilterUsersSearchBar from "../../components/AdminDashboard/FilterUsersSearchBar/FilterUsersSearchBar";
-import FilterGoodDeedsSearchBar from '../../components/AdminDashboard/FilterGoodDeedsSearchBar/FilterGoodDeedsSearchBar';
+import FilterGoodDeedsSearchBar from "../../components/AdminDashboard/FilterGoodDeedsSearchBar/FilterGoodDeedsSearchBar";
 import GoodDeedsList from "../../components/GoodDeedList/GoodDeedList";
 import GoodDeedCard from "../../components/GoodDeedCard/GoodDeedCard";
+import UsersList from "../../components/UsersList/UsersList";
 import { UserGoodDeedsContext } from "../../contexts/UserGoodDeedsContext";
-import { GlobalGoodDeedsContext } from "../../contexts/GlobalGoodDeedsContext";
+import { GoodDeedsContext } from "../../contexts/GoodDeedsContext";
 import { AuthContext } from "../../contexts/AuthContext";
 
-const AdminPanelPageContainer = styled.div`
+const AdminDashboardPageContainer = styled.div`
   display: flex;
 `;
 
@@ -25,13 +26,20 @@ const RightSection = styled.div`
   padding: 20px;
 `;
 
-const AdminPanelPage = () => {
-  const { userGoodDeeds, addGoodDeed, deleteGoodDeed } = useContext(UserGoodDeedsContext);
-  const { globalGoodDeeds, addGlobalGoodDeed, deleteGlobalGoodDeed } = useContext(GlobalGoodDeedsContext);
-  const { user } = useContext(AuthContext);
+const AdminDashboardPage = () => {
+  const { userGoodDeeds, addGoodDeed, deleteGoodDeed } =
+    useContext(UserGoodDeedsContext);
+  const { globalGoodDeeds, addGlobalGoodDeed, deleteGlobalGoodDeed } =
+    useContext(GoodDeedsContext);
+  const { fetchAllUsers, Users } = useContext(AuthContext);
+
+  useEffect(() => {
+    fetchAllUsers();
+    console.log(Users, "users from admin dashboard page");
+  }, [fetchAllUsers]);
 
   return (
-    <AdminPanelPageContainer>
+    <AdminDashboardPageContainer>
       <LeftSection>
         <h2>Users List</h2>
         <AddNewUserForm />
@@ -50,7 +58,7 @@ const AdminPanelPage = () => {
       <RightSection>
         <h2>Good Deeds List</h2>
         <AddGlobalGoodDeedForm addGoodDeed={addGlobalGoodDeed} />
-        <FilterGoodDeedsSearchBar />
+        <FilterGoodDeedsSearchBar onSearch={globalGoodDeeds} />
         <GoodDeedsList>
           {globalGoodDeeds.map((goodDeed) => (
             <GoodDeedCard key={goodDeed.id}>
@@ -62,8 +70,8 @@ const AdminPanelPage = () => {
           {/* Add more GoodDeedCards */}
         </GoodDeedsList>
       </RightSection>
-    </AdminPanelPageContainer>
+    </AdminDashboardPageContainer>
   );
 };
 
-export default AdminPanelPage;
+export default AdminDashboardPage;

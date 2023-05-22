@@ -60,26 +60,6 @@ const UserGoodDeedsContextProvider = ({ children }) => {
     }
   };
 
-  const deleteGoodDeed = async (goodDeedId) => {
-    try {
-      await axios.delete(
-        `http://localhost:5000/api/gooddeeds/personal/${goodDeedId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const filteredGoodDeeds = userGoodDeeds.filter(
-        (goodDeed) => goodDeed._id !== goodDeedId
-      );
-      setUserGoodDeeds(filteredGoodDeeds);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const saveGlobalGoodDeed = async (globalGoodDeed) => {
     const { title, description, difficulty, status, creator, user } =
       globalGoodDeed;
@@ -112,6 +92,37 @@ const UserGoodDeedsContextProvider = ({ children }) => {
     }
   };
 
+  const submitNewUserGoodDeed = async (event, goodDeed) => {
+    event.preventDefault();
+
+    try {
+      await addGoodDeed(goodDeed);
+      setUserGoodDeeds([...userGoodDeeds, goodDeed]);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteGoodDeed = async (goodDeedId) => {
+    try {
+      await axios.delete(
+        `http://localhost:5000/api/gooddeeds/personal/${goodDeedId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const filteredGoodDeeds = userGoodDeeds.filter(
+        (goodDeed) => goodDeed._id !== goodDeedId
+      );
+      setUserGoodDeeds(filteredGoodDeeds);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const value = {
     userGoodDeeds,
     addGoodDeed,
@@ -119,6 +130,7 @@ const UserGoodDeedsContextProvider = ({ children }) => {
     fetchUserGoodDeeds,
     setUserGoodDeeds,
     saveGlobalGoodDeed,
+    submitNewUserGoodDeed,
   };
 
   useEffect(() => {

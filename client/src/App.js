@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
-import AuthContextProvider from "./context/AuthContext";
+import AuthContextProvider from "./contexts/AuthContext";
 
 import Navbar from "./components/NaveBar/NavBar";
 

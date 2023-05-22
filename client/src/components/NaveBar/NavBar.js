@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-
-import { AuthContext } from "../../context/AuthContext";
+import { useHistory } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthContext";
 import { StyledNavbar, StyledNavLink } from "./styles";
 
 const Navbar = () => {
-  const { isAdmin, logout, isUserLoggedIn,setIsUserLoggedIn } = useContext(AuthContext);
+  const { isAdmin, logout, isUserLoggedIn, setIsUserLoggedIn } =
+    useContext(AuthContext);
+    const history = useHistory();
 
   // use effect to get the isuserloggedin from the local storage
   useEffect(() => {
@@ -12,8 +14,7 @@ const Navbar = () => {
     if (storedToken) {
       setIsUserLoggedIn(true);
     }
-  }, []);
-
+  }, [setIsUserLoggedIn]);
 
   return (
     <StyledNavbar>
@@ -32,7 +33,10 @@ const Navbar = () => {
               <StyledNavLink to="/admin-dashboard">Admin Panel</StyledNavLink>
             ) : null}
             <span>Logged in as "need to change it"</span>
-            <button onClick={logout}>Logout</button>
+            <button onClick={()=>{
+              logout();
+              history.push("/");
+            }}>Logout</button>
           </div>
         ) : (
           <div>

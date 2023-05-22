@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import AuthContextProvider from "./context/AuthContext";
-import GoodDeedsContextProvider from "./context/GoodDeedsContext";
-import UserGoodDeedsContextProvider from "./context/UserGoodDeedsContext";
+import AuthContextProvider from "./contexts/AuthContext";
+import GoodDeedsContextProvider from "./contexts/GoodDeedsContext";
+import UserGoodDeedsContextProvider from "./contexts/UserGoodDeedsContext";
 
 import App from "./App";
 

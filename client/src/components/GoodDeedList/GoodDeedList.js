@@ -1,16 +1,11 @@
-import React from "react";
+
 import GoodDeedCard from "../GoodDeedCard/GoodDeedCard";
 import { ListContainer } from "./styles";
 
-const GoodDeedList = ({ goodDeeds }) => {
+const GoodDeedList = ({ children }) => {
   return (
     <ListContainer>
-      {goodDeeds.map((goodDeed) => (
-        <GoodDeedCard
-          title={goodDeed.title}
-          description={goodDeed.description}
-        />
-      ))}
+{children}
     </ListContainer>
   );
 };

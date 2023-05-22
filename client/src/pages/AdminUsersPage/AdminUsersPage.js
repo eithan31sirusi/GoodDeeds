@@ -1,7 +1,14 @@
-import React, { useContext, useEffect } from 'react';
-import { UserGoodDeedsContext } from '../../context/UserGoodDeedsContext';
+import React, { useContext, useEffect } from "react";
+import { UserGoodDeedsContext } from "../../contexts/UserGoodDeedsContext";
 
-import { AdminUsersPageContainer, UsersTable, TableHeader, TableBody, TableRow, TableData } from './AdminUsersPageStyle';
+import {
+  AdminUsersPageContainer,
+  UsersTable,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableData,
+} from "./AdminUsersPageStyle";
 
 const AdminUsersPage = () => {
   const { users, getUsers } = useContext(UserGoodDeedsContext);
@@ -22,7 +29,7 @@ const AdminUsersPage = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users.map(user => (
+          {users.map((user) => (
             <TableRow key={user.id}>
               <TableData>{user.name}</TableData>
               <TableData>{user.email}</TableData>

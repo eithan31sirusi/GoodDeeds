@@ -3,7 +3,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import GoodDeedForm from "../../components/GoodDeedForm/GoodDeedForm";
 import GoodDeedCard from "../../components/GoodDeedCard/GoodDeedCard";
 import CustomButton from "../../components/common/CustomButton/CustomButton";
-import { UserGoodDeedsContext } from "../../context/UserGoodDeedsContext";
+import { UserGoodDeedsContext } from "../../contexts/UserGoodDeedsContext";
 
 import {
   GoodDeedContainer,
@@ -17,15 +17,17 @@ const UserGoodDeedsPage = () => {
   const {
     userGoodDeeds,
     fetchUserGoodDeeds,
-    setUserGoodDeeds,
     deleteGoodDeed,
+    setuserGoodDeeds,
   } = useContext(UserGoodDeedsContext);
 
-  const [newUserGoodDeeds, setNewUserGoodDeeds] = useState([]);
+  const [userDeedsList, setUserDeedsList] = useState(userGoodDeeds);
 
   useEffect(() => {
     fetchUserGoodDeeds();
-  }, [fetchUserGoodDeeds, setUserGoodDeeds]);
+    setUserDeedsList(userDeedsList);
+    console.log(userGoodDeeds, "user good deeds from user good deeds page");
+  }, [fetchUserGoodDeeds]);
 
   return (
     <UserGoodDeedsPageContainer>
@@ -33,7 +35,7 @@ const UserGoodDeedsPage = () => {
       {userGoodDeeds.map((deed) => (
         <GoodDeedContainer>
           <GoodDeedCard
-            key={deed._id}
+            key={deed.id}
             title={deed.title}
             description={deed.description}
             difficulty={deed.difficulty}
@@ -43,7 +45,7 @@ const UserGoodDeedsPage = () => {
           <button
             onClick={() => {
               deleteGoodDeed(deed._id);
-              setNewUserGoodDeeds(userGoodDeeds);
+              fetchUserGoodDeeds();
             }}
           >
             Delete
